@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% load staticfiles %}
+		<meta charset="utf-8">
+		<title>Content Migrate Dashboard</title>
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<div class="container-fluid" style="background-color: #90ccf9">
+	 		<div name="title">
+	 			<div class="row">
+	 				<div class="col-md-10">
+						<h1 style="margin-left: 5%; padding-bottom: 1%">Import Page from JSON</h1>
+					</div>
+					<div class="col-md-2">
+						<img src="/static/images/pronto_logo.png" style="width: 150px; margin-top: 7%">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div name="content" style="margin-left: 5%">
+				<br/>
+				<form name="importform" enctype="multipart/form-data" method="post" action=".">
+				{% csrf_token %}
+				
+				<div class="row">
+					<div class="col-md-1">
+						<p>Host URL</p>
+					</div>
+					<div class="col-md-5">
+						{{form.host_url}}
+					</div>
+				</div>
+
+				<div class="row" style="margin-top: 1%">
+					<div class="col-md-1">
+						<p>Upload File</p>
+					</div>
+					<div class="col-md-5">
+						{{form.upload_file}}
+					</div>
+				</div>
+
+				<p><b>Import As: (wordpress id)</b></p>
+
+				<div class="row">
+					<div class="col-md-1">
+						<p>ID</p> 
+					</div>
+					<div class="col-md-5">
+						<p>{{form.id_field}}</p>
+					</div>
+				</div>
+
+				<div class="row" style="margin-top: 0.5%">
+					<div class="col-md-1">
+						<p>Password<p> 
+					</div> 
+					<div class="col-md-5">
+						<p>{{form.password_field}}</p>
+					</div>
+				</div>
+
+				<div class"row">
+					<button type="submit">Import</button>
+					<hr/>
+
+					<p><b>Cautions</b></p>
+					<p>First, you need to activate plugins as list below.<br/>
+					1) JSON Basic Authentication <br/>
+					2) WP REST API</p>
+				</div>
+				</form>
+				<h2><a href=/migrate/>Back</a></h2>
+			</div>
+		</div>
+ 	</body>
+</html>

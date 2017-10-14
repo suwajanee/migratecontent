@@ -1,0 +1,13 @@
+<p>Blog Export</p>
+<form name="blogexportform" enctype="multipart/form-data" method="post" action=".">
+{% csrf_token %}
+
+<p>Host url: {{form.host_url}}</p>
+<p>Upload: {{form.upload_file}}</p>
+<p>ID: {{form.id_field}}</p>
+<p>Password: {{form.password_field}}</p>
+
+<button type="submit">Import</button>
+<h2><a href=/migrate/>Back</a></h2>
+
+</form>

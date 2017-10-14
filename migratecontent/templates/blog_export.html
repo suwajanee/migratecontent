@@ -1,0 +1,21 @@
+<p>Blog Export</p>
+<form name="blogexportform" enctype="multipart/form-data" method="post" action=".">
+{% csrf_token %}
+
+<p>Header Tag</p>
+<p>{{form.title_tag}}</p>
+<p>Header Element</p>
+<p>{{form.title_class_type}} {{form.title_class}}</p>
+<p>Date</p>
+<p>{{form.date_tag}}</p>
+<p>Date Element</p>
+<p>{{form.date_class_type}} {{form.date_class}} Remove {{form.date_remove_text}}</p>
+<p>Content Tag</p>
+<p>{{form.content_tag}}</p>
+<p>Content Element</p>
+<p>{{form.content_class_type}} {{form.content_class}} Class No. {{form.content_order}}</p>
+<p>{{form.upload_file}}</p>
+<button type="submit">Export</button>
+<h2><a href=/migrate/>Back</a></h2>
+
+</form>
