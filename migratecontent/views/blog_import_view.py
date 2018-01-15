@@ -25,20 +25,16 @@ class BlogImportView(TemplateView):
 
 	def create_post(self, headers, host_url, data, img_id):
 		#check / behind url
-		if host_url[-1:] == '/':
-			host_url = host_url[:-1]
+		host_url = host_url.strip('/')
 
 		url = host_url + '/wp-json/wp/v2/posts'
 		post_date = datetime.strptime(data['date'], '%B %d, %Y')
-
 
 		post_data = {
 			'status': 'publish',
 			'title': data['title'],
 			'content': data['content'],
 			'date': post_date,
-			'categories': data['categories'],
-			'tags': data['tags'],
 			'featured_media': img_id
 		}
 
@@ -64,7 +60,7 @@ class BlogImportView(TemplateView):
 
 			image_list_inner = []
 
-			if "www" in img_src: 
+			if "http" in img_src: 
 				old_image = img_src
 				image_list_inner.append(old_image)
 
@@ -102,7 +98,7 @@ class BlogImportView(TemplateView):
 					img_name = img_name + '.jpg'
 				img_path = 'media/' + img_name
 				urllib.urlretrieve(download_url, img_path)
-				with open(img_path) as img:
+				with open(img_path, 'rb') as img:
 					files = {'file': img}
 
 					img_data = {
@@ -112,12 +108,10 @@ class BlogImportView(TemplateView):
 
 					r = requests.post(url, data=img_data, headers=headers, files=files)
 					img_response = json.loads(r.content)
-					img_dict[key] = img_response['guid']['rendered']
-					# print img_dict[key].split("/")[-1]
+					img_dict[key] = img_response['media_details']['sizes']['large']['source_url']
+
 					if feature_img == key:
 						img_id = img_response['id']
-
-					# img_id.append(img_response['id'])
 
 		return img_dict, img_id
 
@@ -144,8 +138,7 @@ class BlogImportView(TemplateView):
 		user_id = request.POST['id_field']
 		user_password = request.POST['password_field']
 
-		if host_url[-1:] == '/':
-			host_url = host_url[:-1]
+		host_url = host_url.strip('/')
 
 		auth = base64.b64encode(user_id + ':' + user_password)
 		headers = {'Authorization': 'Basic ' + auth}

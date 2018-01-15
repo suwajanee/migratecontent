@@ -3,12 +3,14 @@ import csv
 import json
 import os
 
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
 import requests
 import urllib
-from bs4 import BeautifulSoup
+import urllib2
+from bs4 import BeautifulSoup, NavigableString
 
 from ..forms import PageImportForm
 
@@ -24,8 +26,7 @@ class PageImportView(TemplateView):
 	def create_page(self, headers, host_url, data):
 		
 		#prevent last / slug of host_url
-		if host_url[-1:] == '/':
-			host_url = host_url[:-1]
+		host_url = host_url.strip('/')
 
 		url = host_url + '/wp-json/wp/v2/pages'
 		last_url_source =  data['page_source']
@@ -119,26 +120,28 @@ class PageImportView(TemplateView):
 		user_id = request.POST['id_field']
 		user_password = request.POST['password_field']
 
+		host_url = host_url.strip('/')
+
 		auth = base64.b64encode(user_id + ':' + user_password)
 		headers = {'Authorization': 'Basic ' + auth}
 
 		json_file = json_file.read()
 		json_data = json.loads(json_file)
 
-		image_list = self.gather_image(json_data)
-		img_dict = self.upload_image(headers, host_url, image_list)
-		for key,value in img_dict.iteritems():
-			json_file = json_file.replace(key,value)
-
-		json_data = json.loads(json_file)
 		pages = []
 		for data in json_data:
+			image_list = self.gather_image(json_data)
+			img_dict = self.upload_image(headers, host_url, image_list)
+			for key,value in img_dict.iteritems():
+				json_file = json_file.replace(key,value)
+
 			page_url = self.create_page(headers, host_url, data)
+
 			pages.append(
 				{
 					'url': page_url,
 					'title': data['title']
 				})
-
 		return render(
-			request, 'result.html', {'data': pages, 'type': 'Page'})
+			request, 'result.html', {'datas': pages, 'type': 'Page'})
+

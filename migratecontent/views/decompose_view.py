@@ -25,7 +25,6 @@ class DecomposeView(TemplateView):
 		tag_data = str(request.POST['decompose_tag'])
 		class_data = str(request.POST['decompose_class'])
 		decompose_type = str(request.POST['decompose_type'])
-		decompose_order_number = int(request.POST['decompose_order']) - 1
 
 		json_data = json.loads(json_file.read())
 		page_json = []
@@ -35,10 +34,7 @@ class DecomposeView(TemplateView):
 			soup = BeautifulSoup(data['content'], 'html.parser')
 
 			try:
-				if decompose_type == 'id':
-					soup.find(tag_data,{decompose_type: class_data}).decompose()
-				elif decompose_type == 'class':
-					soup.findAll(tag_data,{decompose_type: class_data})[decompose_order_number].decompose()
+				soup.find(tag_data,{decompose_type: class_data}).decompose()
 			except:
 				pass
 

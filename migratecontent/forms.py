@@ -1,7 +1,7 @@
 from django import forms
 
-class PageExportForm(forms.Form):
 
+class PageExportForm(forms.Form):
 	title_tag = forms.CharField(
 		widget=forms.TextInput(
 			attrs={
@@ -12,13 +12,14 @@ class PageExportForm(forms.Form):
 	)
 
 	TITLE_CHOICES = (
+		('', '-'),
 		('id', 'id'),
 		('class', 'class'),
 	)
 
 	title_class_type = forms.ChoiceField(
 		choices=TITLE_CHOICES,
-		required=True
+		required=False
 	)
 
 	title_class = forms.CharField(
@@ -27,7 +28,7 @@ class PageExportForm(forms.Form):
 				'id': 'title_class'
 			}
 		),
-		required=True
+		required=False
 	)
 
 	content_tag = forms.CharField(
@@ -58,32 +59,10 @@ class PageExportForm(forms.Form):
 		required=True
 	)
 
-	content_order = forms.CharField(
-		widget=forms.TextInput(
-			attrs={
-				'id': 'content_order'
-			}
-		),
-		initial=1
-	)
-
 	upload_file = forms.FileField()
-
-	SIDEBAR_CHOICES = (
-		('default', 'Default'),
-		('left', 'Left'),
-		('right', 'Right'),
-		('full-width', 'Full-Width')
-	)
-
-	page_sidebar = forms.ChoiceField(
-		choices=SIDEBAR_CHOICES,
-		required=True
-	)
 
 
 class PageImportForm(forms.Form):
-
 	host_url = forms.CharField(
 		widget=forms.TextInput(
 			attrs={
@@ -113,8 +92,8 @@ class PageImportForm(forms.Form):
 		required=True
 	)
 
-class DecomposeForm(forms.Form):
 
+class DecomposeForm(forms.Form):
 	decompose_tag = forms.CharField(
 		widget=forms.TextInput(
 			attrs={
@@ -127,8 +106,8 @@ class DecomposeForm(forms.Form):
 	CONTENT_CHOICES = (
 		('id', 'id'),
 		('class', 'class'),
+		('itemprop', 'itemprop'),
 	)
-
 	decompose_type = forms.ChoiceField(
 		choices=CONTENT_CHOICES,
 		required=True
@@ -145,17 +124,8 @@ class DecomposeForm(forms.Form):
 
 	upload_file = forms.FileField()
 
-	decompose_order = forms.CharField(
-		widget=forms.TextInput(
-			attrs={
-				'id': 'decompose_order'
-			}
-		),
-		initial=1
-	)
 
 class BlogExportForm(forms.Form):
-
 	title_tag = forms.CharField(
 		widget=forms.TextInput(
 			attrs={
@@ -166,13 +136,14 @@ class BlogExportForm(forms.Form):
 	)
 
 	TITLE_CHOICES = (
+		('', '-'),
 		('id', 'id'),
 		('class', 'class'),
+		('itemprop', 'itemprop'),
 	)
-
 	title_class_type = forms.ChoiceField(
 		choices=TITLE_CHOICES,
-		required=True
+		required=False
 	)
 
 	title_class = forms.CharField(
@@ -181,7 +152,7 @@ class BlogExportForm(forms.Form):
 			'id': 'title_class'
 			}
 		),
-		required=True
+		required=False
 	)
 
 	date_tag = forms.CharField(
@@ -190,15 +161,18 @@ class BlogExportForm(forms.Form):
 				'id': 'date_tag'
 			}
 		),
+		required=False
 	)
 
 	DATE_CHOICES = (
+		('', '-'),
 		('id', 'id'),
 		('class', 'class'),
+		('itemprop', 'itemprop'),
 	)
-
 	date_class_type = forms.ChoiceField(
-		choices=DATE_CHOICES
+		choices=DATE_CHOICES,
+		required=False
 	)
 
 	date_class = forms.CharField(
@@ -207,6 +181,7 @@ class BlogExportForm(forms.Form):
 				'id': 'date_class'
 			}
 		),
+		required=False
 	)
 
 	date_remove_text = forms.CharField(
@@ -215,6 +190,7 @@ class BlogExportForm(forms.Form):
 				'id': 'date_remove_text'
 			}
 		),
+		required=False
 	)
 
 	content_tag = forms.CharField(
@@ -229,8 +205,8 @@ class BlogExportForm(forms.Form):
 	CONTENT_CHOICES = (
 		('id', 'id'),
 		('class', 'class'),
+		('itemprop', 'itemprop'),
 	)
-
 	content_class_type = forms.ChoiceField(
 		choices=CONTENT_CHOICES,
 		required=True
@@ -245,19 +221,10 @@ class BlogExportForm(forms.Form):
 		required=True
 	)
 
-	content_order = forms.CharField(
-		widget=forms.TextInput(
-			attrs={
-				'id': 'content_order'
-			}
-		),
-		initial=1
-	)
-
 	upload_file = forms.FileField()
 
-class BlogImportForm(forms.Form):
 
+class BlogImportForm(forms.Form):
 	host_url = forms.CharField(
 		widget=forms.TextInput(
 			attrs={

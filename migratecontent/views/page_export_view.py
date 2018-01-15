@@ -2,6 +2,7 @@ import csv
 import json
 import os
 
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
@@ -27,9 +28,7 @@ class PageExportView(TemplateView):
 		title_class = request.POST['title_class']
 		content_tag = request.POST['content_tag']
 		content_class_type = request.POST['content_class_type']
-		content_class = request.POST['content_class']
-		content_order_number = int(request.POST['content_order']) - 1
-		page_sidebar = request.POST['page_sidebar']		
+		content_class = request.POST['content_class']	
 
 		page_json = [] 
 		reader = csv.reader(csv_file, delimiter=',')
@@ -49,21 +48,12 @@ class PageExportView(TemplateView):
 				title = ''
 			
 			content = ''
-			content_order_list = []
-			if content_class_type == 'id':
-				for contents in soup.find(content_tag, {content_class_type:content_class}):
-					content += str(contents)
-			
-			elif content_class_type == 'class':
-				for contents in soup.findAll(content_tag, {content_class_type:content_class}):
-					content_order_list.append(str(contents))
-
-				content = content_order_list[content_order_number]
+			for contents in soup.find(content_tag, {content_class_type:content_class}):
+				content += str(contents)
 
 			data_json = {
 					'title': title,
 					'content': content,
-					'sidebar' : page_sidebar,
 					'page_source' : website_url
 				}
 

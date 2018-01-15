@@ -25,11 +25,6 @@ class BlogExportView(TemplateView):
 		date = date.strip(' \t\r\n')
 		return date
 
-	def get_categories_or_tag_list(self, data):
-		data_replaced = data.replace("|", ',')
-		data_replaced = data_replaced.strip(' ')
-		return data_replaced
-
 	def post(self, request):
 		csv_file = request.FILES['upload_file']
 
@@ -43,21 +38,11 @@ class BlogExportView(TemplateView):
 		content_tag = request.POST['content_tag']
 		content_class_type = request.POST['content_class_type']
 		content_class = request.POST['content_class']
-		content_order = int(request.POST['content_order']) - 1
 
 		post_json = []
 		reader = csv.reader(csv_file, delimiter=',')
 		for row in reader:
 			website_url = row[0]
-			try:
-				categories_list = self.get_categories_or_tag_list(row[1])
-			except:
-				categories_list = []
-
-			try:
-				tag_list = self.get_categories_or_tag_list(row[2])
-			except:
-				tag_list = []
 
 			html_page = urllib2.urlopen(website_url)
 			soup = BeautifulSoup(html_page, "html.parser")
@@ -65,7 +50,11 @@ class BlogExportView(TemplateView):
 
 			title = ''
 			for titles in soup.find(title_tag, {title_class_type:title_class}):
-				title = titles.text
+				try:
+					title = titles.text
+				except:
+					title = str(titles)
+
 
 			date = ''
 			for dates in soup.find(date_tag, {date_class_type:date_class}):
@@ -73,15 +62,8 @@ class BlogExportView(TemplateView):
 				date = self.clean_date_text(date_data, date_remove_text)
 
 			content = ''
-			content_list = []
-			if content_class_type == 'id':
-				for contents in soup.find(content_tag, {content_class_type:content_class}):
-					content += str(contents)
-
-			elif content_class_type == 'class':
-				for contents in soup.findAll(content_tag, {content_class_type:content_class}):
-					content_list.append(contents)
-				content = str(content_list[content_order])
+			for contents in soup.find(content_tag, {content_class_type:content_class}):
+				content += str(contents)
 
 			image = ''
 			try:
@@ -96,8 +78,6 @@ class BlogExportView(TemplateView):
 					'content': content,
 					'image': image,
 					'page_source': website_url,
-					'categories': categories_list,
-					'tags': tag_list
 				}
 
 			post_json.append(data_json)
